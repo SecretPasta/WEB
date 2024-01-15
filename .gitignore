@@ -1,0 +1,19 @@
+# Ignore all files except HTML, CSS, and JavaScript
+*
+
+# Allow HTML files
+!*.html
+
+# Allow CSS files
+!*.css
+
+# Allow JavaScript files
+!*.js
+
+# Allow folders
+!*/
+
+#Allow gitignore
+!*.gitignore
+
+!*.md
