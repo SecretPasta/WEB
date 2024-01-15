@@ -1,1 +1,1 @@
-WEB Technology Lab Assaigments
+WEB Technology Lab assignment
