@@ -1,0 +1,46 @@
+#calculator {
+    border: 1px solid silver;
+    background-color: lightblue;
+    width: 440px; 
+    min-height: 320px;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex; 
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center children vertically */
+    align-items: center; /* Center children horizontally */
+}
+
+button {
+    width: 50px; /* Adjusted for better fit */
+    height: 30px; /* New addition for uniform button size */
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    cursor: pointer; /* New addition for cursor */
+}
+
+.row {
+    display: flex; /* Use flexbox for rows as well */
+    justify-content: center; /* Center row content horizontally */
+    width: 100%; /* Make row take full width of the calculator */
+}
+
+.number {
+    background-color: #0047ab;
+}
+
+.operator, .function {
+    background-color: #A63534;
+}
+
+.function {
+    background-color: #8a2be2; /* New addition for function button color */
+}
+
+.memory {
+    background-color: #4B0082; /* New addition for memory button color */
+}
