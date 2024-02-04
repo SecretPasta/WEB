@@ -8,31 +8,59 @@
   </head>
   <body>
     <div id="app" class="max-w-[1000px] mx-auto">
-      <h1 class="font-bold text-3xl text-center text-blue-600 my-4">
-        Cryptocurrency Data
+      <h1 class="font-bold text-3xl text-center text-blue-600 my-4 p-2">
+        Cryptocurrency Data 
       </h1>
     </div>
     <script>
-     
-      const row = (k, v, i) => {
-        // complete tr string
-        return `<tr>
-            <td class="w-16 p-2 align-top border-b ${i===0 && ' border-t'} border-gray-200"><img class="h-full w-auto" src="${v['image']}" /></td>
-            /* implement all cells here */
+      const row = (v, i) => {
+        // Simplified tr string without the image
+        return `<tr class="${i % 2 === 0 ? 'bg-gray-100' : 'bg-white'}">
+            <td class="p-2 align-top border-b border-gray-200"><img class="h-8 w-8" src="${v.image}" alt="${v.name} logo"/></td>
+            <td class="p-2 align-top border-b border-gray-200">${v.name}</td>
+            <td class="p-2 align-top border-b border-gray-200">${v.id}</td>
+            <td class="p-2 align-top border-b border-gray-200"><a href="${v.website}" target="_blank">${v.website}</a></td>
+            <td class="p-2 align-top border-b border-gray-200"><a href="${v.coingecko}" target="_blank">CoinGecko</a></td>
+            <td class="p-2 align-top border-b border-gray-200">${v.summary}</td>
             </tr>`
-      }      
-
-      const createTable = (data) => {
-        // create table string and insert it into "app" div before end
       }
+    
+      const createTable = (data) => {
+  // Convert object of objects into an array of objects
+  const dataArray = Object.keys(data).map(key => ({ ...data[key], symbol: key }));
+  
+  const tableHeaders = `
+    <tr class="bg-gray-200">
+      <th class="p-2 border-b border-t border-gray-200">Logo</th>
+      <th class="p-2 border-b border-t border-gray-200">Name</th>
+      <th class="p-2 border-b border-t border-gray-200">ID</th>
+      <th class="p-2 border-b border-t border-gray-200">Website</th>
+      <th class="p-2 border-b border-t border-gray-200">CoinGecko</th>
+      <th class="p-2 border-b border-t border-gray-200">Summary</th>
+    </tr>`;
 
-      const url = "https://api.mtw-testnet.com/assets/all"
+  // Use map function to create row for each item
+  const tableRows = dataArray.map((item, index) => row(item, index)).join('');
+
+  // Combine headers and rows to form table
+  const table = `<table class="min-w-full border-collapse">${tableHeaders}${tableRows}</table>`;
+
+  // Create a container for the table
+  const tableContainer = document.createElement('div');
+  tableContainer.innerHTML = table;
+
+  // Append the table after the h1 element
+  const appDiv = document.getElementById("app");
+  appDiv.appendChild(tableContainer);
+}
+
+    
+      const url = "https://api.mtw-testnet.com/assets/all";
       fetch(url)
-        .then((response) => {
-          return response.json()
-        })
-        .then((v) => createTable(v))
+        .then((response) => response.json())
+        .then((data) => createTable(data))
         .catch((err) => console.log(err))
     </script>
+    
   </body>
 </html>
