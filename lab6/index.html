@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Catalog</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #ff9a9e, #fad0c4);
+      font-family: 'Open Sans', sans-serif;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .table th, .table td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+      background-color: #6c7ae0;
+      color: white;
+    }
+
+    .table tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .table img {
+      width: 100px;
+      height: auto;
+      border-radius: 5px;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #8892b0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, box-shadow 0.3s;
+    }
+
+    .button:hover {
+      background-color: #4b6584;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .page-number {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="myTable"></div>
+    <div class="pagination">
+      <button id="prev" class="button">Previous</button>
+      <span id="pageNumber" class="page-number">1 of 10</span>
+      <button id="next" class="button">Next</button>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let products = [];
+
+    function fetchProducts() {
+      fetch("https://dummyjson.com/products?limit=100")
+        .then(response => response.json())
+        .then(data => {
+          products = data.products;
+          paginate(currentPage);
+        });
+    }
+
+    function paginate(page) {
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedItems = products.slice(start, end);
+      createTable(paginatedItems);
+      $('#pageNumber').text(`${currentPage} of ${Math.ceil(products.length / itemsPerPage)}`);
+    }
+
+    function createTable(data) {
+      const table = $('<table class="table"></table>');
+      const headerRow = $('<tr></tr>').append('<th>Title</th>', '<th>Description</th>', '<th>Price</th>', '<th>Image</th>');
+      table.append(headerRow);
+
+      data.forEach(item => {
+        const row = $('<tr></tr>').append(
+          `<td>${item.title}</td>`,
+          `<td>${item.description}</td>`,
+          `<td>$${item.price}</td>`,
+          `<td><img src="${item.thumbnail}" alt="Product Image"></td>`
+        );
+        table.append(row);
+      });
+
+      $('#myTable').html(table);
+    }
+
+    $(document).ready(function () {
+      fetchProducts();
+
+      $('#prev').click(function () {
+        if (currentPage > 1) {
+          currentPage--;
+          paginate(currentPage);
+        }
+      });
+
+      $('#next').click(function () {
+        if (currentPage * itemsPerPage < products.length) {
+          currentPage++;
+          paginate(currentPage);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
