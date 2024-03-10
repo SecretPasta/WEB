@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Browser</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .thumbnail {
+      padding: 0;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .main-image {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px;
+      margin-bottom: 15px;
+    }
+    .img-preview {
+      width: 100px;
+      height: 60px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    body {
+      overflow-y: scroll;
+    }
+  </style>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    function PhotoBrowser() {
+      const [photos, setPhotos] = React.useState([]);
+      const [selectedPhoto, setSelectedPhoto] = React.useState('');
+
+      React.useEffect(() => {
+        fetch('https://picsum.photos/v2/list?page=2&limit=10')
+          .then(response => response.json())
+          .then(data => {
+            setPhotos(data);
+            if (data.length > 0) {
+              setSelectedPhoto(data[0].download_url);
+            }
+          });
+      }, []);
+
+      const selectPhoto = (photoUrl) => {
+        setSelectedPhoto(photoUrl);
+      };
+
+      return (
+        <div className="container">
+          <h1>Photo Browser</h1>
+          <div className="row">
+            <div className="col-md-8">
+              <img src={selectedPhoto} className="main-image" alt="Selected" />
+            </div>
+            <div className="col-md-4">
+              <div className="d-flex flex-wrap">
+                {photos.map((photo, index) => (
+                  <div key={index} className="thumbnail" onClick={() => selectPhoto(photo.download_url)}>
+                    <img src={photo.download_url} className="img-preview" alt={`Photo ${index}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<PhotoBrowser />, document.getElementById('root'));
+  </script>
+</body>
+</html>
